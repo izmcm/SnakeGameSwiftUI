@@ -12,15 +12,16 @@ import UIKit
 struct SnakeViewState {
   var snake: SnakeModel
   var foodPosition: CGPoint
+  var initialGesturePosition: CGPoint
 }
 
 struct SnakeView: View {
   @ObservedObject var viewModel = SnakeViewModel()
   
   @State private var gameIsStarted: Bool = true
-  @State private var initialGesturePosition: CGPoint = .zero
-  
-  let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+
+  let timer = Timer.publish(every: 0.1, on: .main,
+                            in: .common).autoconnect()
   
   var body: some View {
     ZStack {
@@ -37,7 +38,8 @@ struct SnakeView: View {
         }
       } else {
         ZStack {
-          ForEach(0..<self.viewModel.viewState.snake.bodyPositions.count, id: \.self) { index in
+          ForEach(0..<self.viewModel.viewState.snake.bodyPositions.count,
+                  id: \.self) { index in
             Rectangle()
               .frame(width: self.viewModel.viewState.snake.size,
                      height: self.viewModel.viewState.snake.size)
@@ -57,27 +59,18 @@ struct SnakeView: View {
     }
     .gesture(DragGesture().onChanged { gesture in
       if self.gameIsStarted {
-        self.initialGesturePosition = gesture.location
+        self.viewModel.viewState.initialGesturePosition = gesture.location
         self.gameIsStarted.toggle()
       }
     }
     .onEnded { gesture in
-      let xDist =  abs(gesture.location.x - self.initialGesturePosition.x)
-      let yDist =  abs(gesture.location.y - self.initialGesturePosition.y)
-      
-      if self.initialGesturePosition.y < gesture.location.y && yDist > xDist {
-        self.viewModel.changeDirection(to: .down)
-      } else if self.initialGesturePosition.y > gesture.location.y && yDist > xDist {
-        self.viewModel.changeDirection(to: .up)
-      } else if self.initialGesturePosition.x > gesture.location.x && yDist < xDist {
-        self.viewModel.changeDirection(to: .right)
-      } else if self.initialGesturePosition.x < gesture.location.x && yDist < xDist {
-        self.viewModel.changeDirection(to: .left)
-      }
+      self.viewModel.updateDirection(gesture)
       self.gameIsStarted.toggle()
     })
     .onReceive(timer) { (_) in
+      if self.viewModel.viewState.snake.isDead {
         self.viewModel.updateSnakePosition()
+      }
     }
   }
 }

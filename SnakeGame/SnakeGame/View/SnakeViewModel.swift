@@ -8,10 +8,11 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 protocol SnakeViewModelProtocol {
   var viewState: SnakeViewState { get set }
-  func changeDirection(to input: Directions)
+  func updateDirection(_ gesture: DragGesture.Value)
   func generateFoodPosition()
   func generateSnakeInitialPosition()
   func updateSnakePosition()
@@ -28,27 +29,21 @@ final class SnakeViewModel: ObservableObject, SnakeViewModelProtocol {
   
   init() {
     let snakeModel = SnakeModel(direction: .left, bodyPositions: [.zero], size: 10, isDead: false)
-    self.viewState = SnakeViewState(snake: snakeModel, foodPosition: .zero)
+    self.viewState = SnakeViewState(snake: snakeModel, foodPosition: .zero, initialGesturePosition: .zero)
   }
   
-  func changeDirection(to input: Directions) {
-    switch viewState.snake.direction {
-    case .up:
-      if input != .down {
-        viewState.snake.direction = input
-      }
-    case .down:
-      if input != .up {
-        viewState.snake.direction = input
-      }
-    case .right:
-      if input != .left {
-        viewState.snake.direction = input
-      }
-    case .left:
-      if input != .right {
-        viewState.snake.direction = input
-      }
+  func updateDirection(_ gesture: DragGesture.Value) {
+    let xDist =  abs(gesture.location.x - self.viewState.initialGesturePosition.x)
+    let yDist =  abs(gesture.location.y - self.viewState.initialGesturePosition.y)
+    
+    if self.viewState.initialGesturePosition.y < gesture.location.y && yDist > xDist {
+      self.changeDirection(to: .down)
+    } else if self.viewState.initialGesturePosition.y > gesture.location.y && yDist > xDist {
+      self.changeDirection(to: .up)
+    } else if self.viewState.initialGesturePosition.x > gesture.location.x && yDist < xDist {
+      self.changeDirection(to: .right)
+    } else if self.viewState.initialGesturePosition.x < gesture.location.x && yDist < xDist {
+      self.changeDirection(to: .left)
     }
   }
   
@@ -86,12 +81,33 @@ final class SnakeViewModel: ObservableObject, SnakeViewModelProtocol {
   
   func resetGame() {
     let snakeModel = SnakeModel(direction: .left, bodyPositions: [.zero], size: 10, isDead: false)
-    self.viewState = SnakeViewState(snake: snakeModel, foodPosition: .zero)
+    self.viewState = SnakeViewState(snake: snakeModel, foodPosition: .zero, initialGesturePosition: .zero)
     generateSnakeInitialPosition()
     generateFoodPosition()
   }
   
   // MARK: HELP FUNCTIONS
+  private func changeDirection(to input: Directions) {
+    switch viewState.snake.direction {
+    case .up:
+      if input != .down {
+        viewState.snake.direction = input
+      }
+    case .down:
+      if input != .up {
+        viewState.snake.direction = input
+      }
+    case .right:
+      if input != .left {
+        viewState.snake.direction = input
+      }
+    case .left:
+      if input != .right {
+        viewState.snake.direction = input
+      }
+    }
+  }
+  
   private func randomPoint() -> CGPoint {
     let rows = Int(maxX/self.viewState.snake.size)
     let cols = Int(maxY/self.viewState.snake.size)
