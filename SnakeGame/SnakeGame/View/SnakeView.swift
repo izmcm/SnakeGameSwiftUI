@@ -68,7 +68,7 @@ struct SnakeView: View {
       self.gameIsStarted.toggle()
     })
     .onReceive(timer) { (_) in
-      if self.viewModel.viewState.snake.isDead {
+      if !self.viewModel.viewState.snake.isDead {
         self.viewModel.updateSnakePosition()
       }
     }
