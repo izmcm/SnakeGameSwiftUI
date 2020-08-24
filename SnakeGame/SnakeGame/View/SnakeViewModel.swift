@@ -20,13 +20,13 @@ protocol SnakeViewModelProtocol {
 }
 
 final class SnakeViewModel: ObservableObject, SnakeViewModelProtocol {
+  @Published var viewState: SnakeViewState
+
   let minX = UIScreen.main.bounds.minX
   let maxX = UIScreen.main.bounds.maxX
   let minY = UIScreen.main.bounds.minY
   let maxY = UIScreen.main.bounds.maxY
-  
-  @Published var viewState: SnakeViewState
-  
+    
   init() {
     let snakeModel = SnakeModel(direction: .left, bodyPositions: [.zero], size: 10, isDead: false)
     self.viewState = SnakeViewState(snake: snakeModel, foodPosition: .zero, initialGesturePosition: .zero)
