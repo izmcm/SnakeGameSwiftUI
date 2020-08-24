@@ -76,7 +76,6 @@ struct SnakeView: View {
 struct SnakeView_Previews: PreviewProvider {
   static var previews: some View {
     var view = SnakeView()
-    view.viewModel = SnakeViewModel()
     return view
   }
 }

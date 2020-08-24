@@ -10,16 +10,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-protocol SnakeViewModelProtocol {
-  var viewState: SnakeViewState { get set }
-  func updateDirection(_ gesture: DragGesture.Value)
-  func generateFoodPosition()
-  func generateSnakeInitialPosition()
-  func updateSnakePosition()
-  func resetGame()
-}
-
-final class SnakeViewModel: ObservableObject, SnakeViewModelProtocol {
+class SnakeViewModel: ObservableObject {
   @Published var viewState: SnakeViewState
 
   let minX = UIScreen.main.bounds.minX

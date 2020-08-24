@@ -99,8 +99,8 @@
 		89EE3BBF24F401F80098CA71 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				8944F83024EEFABC008B51E4 /* SnakeViewModel.swift */,
 				8944F81E24EEF80E008B51E4 /* SnakeView.swift */,
+				8944F83024EEFABC008B51E4 /* SnakeViewModel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
