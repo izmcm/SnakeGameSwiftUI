@@ -65,10 +65,9 @@ struct SnakeView: View {
       }
     }
     .onEnded { gesture in
-      #warning("atualizar direção da cobra de acordo com o gesto do usuário")
-      self.viewModel.trigger(.updateSnakeDirection(gesture: gesture,
-                                                   initialGesturePosition: self.initialGesturePosition))
       self.gestureFlag.toggle()
+      self.viewModel.trigger(.updateSnakeDirection(gesture: gesture, initialGesturePosition: self.initialGesturePosition))
+      #warning("atualizar direção da cobra de acordo com o gesto do usuário")
     })
     .onReceive(timer) { (_) in
       if !self.viewModel.state.snake.isDead {

@@ -1,46 +1,39 @@
 //
-//  SnakeViewModel.swift
+//  SnakeViewModel+Extension.swift
 //  SnakeGame
 //
-//  Created by im on 20/08/20.
+//  Created by im on 27/10/20.
 //  Copyright © 2020 IzabellaMelo. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import SwiftUI
 
-class SnakeViewModel {  
-  let minX = UIScreen.main.bounds.minX
-  let maxX = UIScreen.main.bounds.maxX
-  let minY = UIScreen.main.bounds.minY
-  let maxY = UIScreen.main.bounds.maxY
-  
-  init() {
-    let snakeModel = SnakeModel(direction: .left, bodyPositions: [.zero], size: 10, isDead: false)
-    self.state = SnakeViewState(snake: snakeModel, foodPosition: .zero, initialGesturePosition: .zero)
+extension SnakeViewModel {
+  func startGame() {
+    self.generateSnakeInitialPosition()
+    self.generateFoodPosition()
   }
   
-  func updateDirection(_ gesture: DragGesture.Value) {
-    let xDist =  abs(gesture.location.x - self.state.initialGesturePosition.x)
-    let yDist =  abs(gesture.location.y - self.state.initialGesturePosition.y)
+  func updateDirection(gesture: DragGesture.Value, initialGesturePosition: CGPoint) {
+    let xDist =  abs(gesture.location.x - initialGesturePosition.x)
+    let yDist =  abs(gesture.location.y - initialGesturePosition.y)
     
-    if self.state.initialGesturePosition.y < gesture.location.y && yDist > xDist {
+    if initialGesturePosition.y < gesture.location.y && yDist > xDist {
       self.changeDirection(to: .down)
-    } else if self.state.initialGesturePosition.y > gesture.location.y && yDist > xDist {
+    } else if initialGesturePosition.y > gesture.location.y && yDist > xDist {
       self.changeDirection(to: .up)
-    } else if self.state.initialGesturePosition.x > gesture.location.x && yDist < xDist {
+    } else if initialGesturePosition.x > gesture.location.x && yDist < xDist {
       self.changeDirection(to: .right)
-    } else if self.state.initialGesturePosition.x < gesture.location.x && yDist < xDist {
+    } else if initialGesturePosition.x < gesture.location.x && yDist < xDist {
       self.changeDirection(to: .left)
     }
   }
   
-  func generateFoodPosition() {
+  private func generateFoodPosition() {
     self.state.foodPosition = randomPoint()
   }
   
-  func generateSnakeInitialPosition() {
+  private func generateSnakeInitialPosition() {
     self.state.snake.bodyPositions[0] = randomPoint()
   }
   
@@ -50,13 +43,13 @@ class SnakeViewModel {
     var previous = state.snake.bodyPositions[0]
     switch state.snake.direction {
     case .down:
-      state.snake.bodyPositions[0].y += CGFloat(state.snake.size)
+      state.snake.bodyPositions[0].y += CGFloat(state.snake.squareSize)
     case .up:
-      state.snake.bodyPositions[0].y -= CGFloat(state.snake.size)
+      state.snake.bodyPositions[0].y -= CGFloat(state.snake.squareSize)
     case .left:
-      state.snake.bodyPositions[0].x += CGFloat(state.snake.size)
+      state.snake.bodyPositions[0].x += CGFloat(state.snake.squareSize)
     case .right:
-      state.snake.bodyPositions[0].x -= CGFloat(state.snake.size)
+      state.snake.bodyPositions[0].x -= CGFloat(state.snake.squareSize)
     }
     
     checkIfEatFood()
@@ -69,13 +62,12 @@ class SnakeViewModel {
   }
   
   func resetGame() {
-    let snakeModel = SnakeModel(direction: .left, bodyPositions: [.zero], size: 10, isDead: false)
-    self.state = SnakeViewState(snake: snakeModel, foodPosition: .zero, initialGesturePosition: .zero)
+    let snakeModel = SnakeModel(direction: .left, bodyPositions: [.zero], squareSize: 10, isDead: false)
+    self.state = SnakeViewState(snake: snakeModel, foodPosition: .zero)
     generateSnakeInitialPosition()
     generateFoodPosition()
   }
   
-  // MARK: HELP FUNCTIONS
   private func changeDirection(to input: Directions) {
     switch state.snake.direction {
     case .up:
@@ -98,11 +90,11 @@ class SnakeViewModel {
   }
   
   private func randomPoint() -> CGPoint {
-    let rows = Int(maxX/self.state.snake.size)
-    let cols = Int(maxY/self.state.snake.size)
+    let rows = Int(maxX/self.state.snake.squareSize)
+    let cols = Int(maxY/self.state.snake.squareSize)
     
-    let randomX = Int.random(in: 1..<rows)*Int(self.state.snake.size)
-    let randomY = Int.random(in: 1..<cols)*Int(self.state.snake.size)
+    let randomX = Int.random(in: 1..<rows)*Int(self.state.snake.squareSize)
+    let randomY = Int.random(in: 1..<cols)*Int(self.state.snake.squareSize)
     
     return CGPoint(x: randomX, y: randomY)
   }

@@ -19,6 +19,6 @@ enum Directions {
 struct SnakeModel {
   var direction: Directions
   var bodyPositions: [CGPoint]
-  var size: CGFloat
+  var squareSize: CGFloat
   var isDead: Bool
 }

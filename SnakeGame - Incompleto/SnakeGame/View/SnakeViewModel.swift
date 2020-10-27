@@ -26,17 +26,13 @@ class SnakeViewModel: ObservableObject {
   func trigger(_ input: SnakeViewInput) {
     switch input {
     case .startGame:
-      self.generateSnakeInitialPosition()
-      self.generateFoodPosition()
-      
+      self.startGame()
     case .resetGame:
       self.resetGame()
-      
-    case .updateSnakePosition:
-      self.updateSnakePosition()
-      
     case .updateSnakeDirection(let gesture, let initialGesturePosition):
       self.updateDirection(gesture: gesture, initialGesturePosition: initialGesturePosition)
+    case .updateSnakePosition:
+      self.updateSnakePosition()
     }
   }
 }
