@@ -21,9 +21,7 @@ enum SnakeViewInput {
   case updateSnakeDirection(gesture: DragGesture.Value, initialGesturePosition: CGPoint)
 }
 
-struct SnakeView: View {
-  @ObservedObject var viewModel = SnakeViewModel()
-  
+struct SnakeView: View {  
   @State private var gestureFlag: Bool = true
   @State private var initialGesturePosition: CGPoint = .zero
 
@@ -33,30 +31,26 @@ struct SnakeView: View {
     ZStack {
       Color.white
       
-      if self.viewModel.state.snake.isDead {
+      if <#T##Bool#> {
         ResetGameButton(viewModel: self.viewModel)
       } else {
         ZStack {
-          ForEach(0..<self.viewModel.state.snake.bodyPositions.count, id: \.self) { index in
+          ForEach(0..<<#T##Int#>, id: \.self) { index in
             Rectangle()
-              .frame(width: self.viewModel.state.snake.squareSize,
-                     height: self.viewModel.state.snake.squareSize)
-              .position(self.viewModel.state.snake.bodyPositions[index])
-              #warning("pegar posição de cada ponto do corpo da cobra")
+              .frame(width: <#T##CGFloat?#>, height: <#T##CGFloat?#>)
+              .position(<#T##CGPoint#>)
           }
           
           Rectangle()
-            .frame(width: self.viewModel.state.snake.squareSize,
-                   height: self.viewModel.state.snake.squareSize)
+            .frame(width: <#T##CGFloat?#>,
+                   height: <#T##CGFloat?#>)
             .foregroundColor(.red)
-            .position(self.viewModel.state.foodPosition)
-            #warning("pegar posição da comida")
+            .position(<#T##CGPoint#>)
         }
       }
     }
     .onAppear {
-      #warning("começar jogo")
-      self.viewModel.trigger(.startGame)
+      self.viewModel.trigger(<#T##SnakeViewInput#>)
     }
     .gesture(DragGesture().onChanged { gesture in
       if self.gestureFlag {
@@ -66,13 +60,11 @@ struct SnakeView: View {
     }
     .onEnded { gesture in
       self.gestureFlag.toggle()
-      self.viewModel.trigger(.updateSnakeDirection(gesture: gesture, initialGesturePosition: self.initialGesturePosition))
-      #warning("atualizar direção da cobra de acordo com o gesto do usuário")
+      self.viewModel.trigger(<#T##SnakeViewInput#>)
     })
     .onReceive(timer) { (_) in
       if !self.viewModel.state.snake.isDead {
-        #warning("atualizar posição da cobra com o tempo")
-        self.viewModel.trigger(.updateSnakePosition)
+        self.viewModel.trigger(<#T##SnakeViewInput#>)
       }
     }
   }
@@ -80,6 +72,6 @@ struct SnakeView: View {
 
 struct SnakeView_Previews: PreviewProvider {
   static var previews: some View {
-    SnakeView(viewModel: SnakeViewModel())
+    SnakeView()
   }
 }

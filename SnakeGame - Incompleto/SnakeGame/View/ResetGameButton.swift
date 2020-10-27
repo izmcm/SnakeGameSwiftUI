@@ -16,7 +16,7 @@ struct ResetGameButton: View {
       Text("Game Over").padding()
       
       Button(action: {
-        self.viewModel.trigger(.resetGame)
+        self.viewModel.trigger(<#T##SnakeViewInput#>)
       }) {
         Text("Play again!")
       }
