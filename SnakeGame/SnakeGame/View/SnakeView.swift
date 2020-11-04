@@ -42,7 +42,6 @@ struct SnakeView: View {
               .frame(width: self.viewModel.state.snake.squareSize,
                      height: self.viewModel.state.snake.squareSize)
               .position(self.viewModel.state.snake.bodyPositions[index])
-              #warning("pegar posição de cada ponto do corpo da cobra")
           }
           
           Rectangle()
@@ -50,12 +49,10 @@ struct SnakeView: View {
                    height: self.viewModel.state.snake.squareSize)
             .foregroundColor(.red)
             .position(self.viewModel.state.foodPosition)
-            #warning("pegar posição da comida")
         }
       }
     }
     .onAppear {
-      #warning("começar jogo")
       self.viewModel.trigger(.startGame)
     }
     .gesture(DragGesture().onChanged { gesture in
@@ -65,14 +62,12 @@ struct SnakeView: View {
       }
     }
     .onEnded { gesture in
-      #warning("atualizar direção da cobra de acordo com o gesto do usuário")
       self.viewModel.trigger(.updateSnakeDirection(gesture: gesture,
                                                    initialGesturePosition: self.initialGesturePosition))
       self.gestureFlag.toggle()
     })
     .onReceive(timer) { (_) in
       if !self.viewModel.state.snake.isDead {
-        #warning("atualizar posição da cobra com o tempo")
         self.viewModel.trigger(.updateSnakePosition)
       }
     }
